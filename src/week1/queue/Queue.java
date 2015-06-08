@@ -1,13 +1,13 @@
 package week1.queue;
 
-import java.util.LinkedList;
+import week1.vector.Vector;
 
 public class Queue implements QueueInterface {
 
-	private LinkedList<Integer> list;
+	private Vector list;
 	
 	public Queue(){
-		list = new LinkedList<Integer>();
+		list = new Vector(4);
 	}
 	
 	@Override
@@ -17,14 +17,14 @@ public class Queue implements QueueInterface {
 
 	@Override
 	public int pop() {
-		int first = list.getFirst();
-		list.removeFirst();		
+		int first = list.get(0);
+		list.remove(0);
 		return first;
 	}
 
 	@Override
 	public int peek() {
-		return list.getFirst();
+		return list.get(0);
 	}
 
 	@Override

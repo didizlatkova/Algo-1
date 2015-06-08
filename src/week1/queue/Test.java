@@ -9,6 +9,7 @@ public class Test {
 		System.out.println(queue.pop());
 		System.out.println(queue.peek());
 		System.out.println(queue.pop());
+		System.out.println(queue.size());
 	}
 
 }
