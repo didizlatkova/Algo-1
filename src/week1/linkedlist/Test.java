@@ -9,6 +9,7 @@ public class Test {
 		list.add(4);
 		list.add(5);
 		list.add(6);
+		list.removeFirst();
 		System.out.println(list.getFirst());
 		System.out.println(list.getLast());
 		list.removeLast();
