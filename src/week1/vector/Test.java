@@ -4,7 +4,8 @@ public class Test {
 
 	public static void main(String[] args) {
 		Vector vector = new Vector(2);
-		vector.add(1);
+		vector.add(3);
+		vector.insert(0, 5);
 		
 		System.out.println(vector.toString());
 		

@@ -33,11 +33,15 @@ public class Vector implements VectorInterface {
 
 	@Override
 	public void insert(int index, int value) {
+		if (index < 0 || index >= accommodated) {
+			throw new IndexOutOfBoundsException();
+		}
+
 		if (accommodated == capacity) {
 			doubleArray();
 		}
 
-		for (int i = index + 1; i < accommodated; i++) {
+		for (int i = accommodated; i >= index + 1; i--) {
 			array[i] = array[i - 1];
 		}
 
@@ -57,11 +61,19 @@ public class Vector implements VectorInterface {
 
 	@Override
 	public int get(int index) {
+		if (index < 0 || index >= accommodated) {
+			throw new IndexOutOfBoundsException();
+		}
+
 		return array[index];
 	}
 
 	@Override
 	public void remove(int index) {
+		if (index < 0 || index >= accommodated) {
+			throw new IndexOutOfBoundsException();
+		}
+
 		for (int i = index; i < accommodated; i++) {
 			array[i] = array[i + 1];
 		}
