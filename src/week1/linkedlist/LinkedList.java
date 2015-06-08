@@ -41,10 +41,11 @@ public class LinkedList {
 		return node.value;
 	}
 
-	public void removeFirst(){
+	public void removeFirst() {
 		first = first.nextNode;
+		size--;
 	}
-	
+
 	public void removeLast() {
 		if (first == null) {
 			throw new IndexOutOfBoundsException();
