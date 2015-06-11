@@ -5,7 +5,7 @@ import java.util.Random;
 public class Test {
 
 	public static void main(String[] args) {
-		SelectionSort selection = new SelectionSort();
+		SortingAlgorithm selection = new InsertionSort();
 		System.out.println(test(selection));
 
 	}
