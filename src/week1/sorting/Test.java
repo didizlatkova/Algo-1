@@ -16,6 +16,9 @@ public class Test {
 		
 		SortingAlgorithm merge = new MergeSort();
 		System.out.println("Merge: " + test(merge));
+		
+		SortingAlgorithm quick = new QuickSort();
+		System.out.println("Quick: " + test(quick));
 
 	}
 
