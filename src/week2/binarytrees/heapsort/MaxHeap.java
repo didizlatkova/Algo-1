@@ -1,16 +1,15 @@
 package week2.binarytrees.heapsort;
 
-public class Heap implements HeapInterface {
+public class MaxHeap {
 
 	private int[] array;
 	private int accommodated = 0;
 
-	public Heap(int capacity) {
+	public MaxHeap(int capacity) {
 		array = new int[capacity + 1];
 	}
 
-	@Override
-	public int getMin() {
+	public int getMax() {
 		if (accommodated == 0) {
 			throw new IndexOutOfBoundsException();
 		}
@@ -18,7 +17,6 @@ public class Heap implements HeapInterface {
 		return array[1];
 	}
 
-	@Override
 	public void insert(int element) {
 		if (accommodated == array.length) {
 			throw new IndexOutOfBoundsException();
@@ -29,7 +27,7 @@ public class Heap implements HeapInterface {
 		array[index] = element;
 
 		while (index / 2 > 0) {
-			if (array[index] < array[index / 2]) {
+			if (array[index] > array[index / 2]) {
 				switchElements(index, index / 2);
 				index /= 2;
 			} else {
@@ -55,8 +53,7 @@ public class Heap implements HeapInterface {
 		return sb.toString();
 	}
 
-	@Override
-	public void removeMin() {
+	public void removeMax() {
 		array[1] = array[accommodated];
 		array[accommodated] = 0;
 		accommodated--;
@@ -64,15 +61,15 @@ public class Heap implements HeapInterface {
 		int index = 1;
 		while (index * 2 <= accommodated) {
 			if (index * 2 + 1 <= accommodated) {
-				if (array[index * 2] > array[index * 2 + 1]
-						&& array[index] > array[index * 2 + 1]) {
+				if (array[index * 2] < array[index * 2 + 1]
+						&& array[index] < array[index * 2 + 1]) {
 					switchElements(index, index * 2 + 1);
 					index = index * 2 + 1;
 					continue;
 				}
 			}
 
-			if (array[index] > array[index * 2]) {
+			if (array[index] < array[index * 2]) {
 				switchElements(index, index * 2);
 				index *= 2;
 			} else {
@@ -81,9 +78,12 @@ public class Heap implements HeapInterface {
 		}
 	}
 
-	@Override
 	public boolean isEmpty() {
 		return accommodated == 0;
+	}
+
+	public int size() {
+		return accommodated;
 	}
 
 }
