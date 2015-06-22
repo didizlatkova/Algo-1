@@ -5,6 +5,10 @@ public class LinkedList {
 	private Node first;
 	private int size = 0;
 
+	public Node getFirstNode() {
+		return this.first;
+	}
+
 	public int getFirst() {
 		if (first == null) {
 			throw new IndexOutOfBoundsException();
@@ -45,7 +49,7 @@ public class LinkedList {
 		if (first == null) {
 			throw new IndexOutOfBoundsException();
 		}
-		
+
 		first = first.nextNode;
 		size--;
 	}
