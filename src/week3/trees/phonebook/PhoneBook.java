@@ -61,11 +61,17 @@ public class PhoneBook {
 
 	// list all records in an alphabetical order
 	public void list() {
-
+		traverse(node);
 	}
 
 	private void traverse(ContactNode node) {
+		if (node == null) {
+			return;
+		}
 		
+		traverse(node.left);
+		System.out.println(node.value.name + " " + node.value.number);
+		traverse(node.right);		
 	}
 
 	// remove a record for a given name
