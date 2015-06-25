@@ -1,6 +1,6 @@
 package week3.trees.bandwidthmanager;
 
-public class PriorityQueue<I> {
+public class PriorityQueue {
 
 	private QueueElement[] array;
 	private int accommodated = 0;
