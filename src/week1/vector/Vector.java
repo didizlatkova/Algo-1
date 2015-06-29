@@ -74,7 +74,7 @@ public class Vector implements VectorInterface {
 			throw new IndexOutOfBoundsException();
 		}
 
-		for (int i = index; i < accommodated; i++) {
+		for (int i = index; i < accommodated - 1; i++) {
 			array[i] = array[i + 1];
 		}
 
