@@ -14,9 +14,9 @@ public class ValidDirectories {
 		boolean visited[] = new boolean[graph.length];
 
 		while (queue.size() > 0) {
-			for (int i = 0; i < graph[queue.peek()].length; i++) {								
+			for (int i = 0; i < graph[queue.peek()].length; i++) {
 				if (graph[queue.peek()][i] > 0) {
-					if (visited[i]){
+					if (visited[i]) {
 						return false;
 					}
 					queue.push(i);
@@ -26,5 +26,9 @@ public class ValidDirectories {
 		}
 
 		return true;
+	}
+
+	private void dfs() {
+
 	}
 }

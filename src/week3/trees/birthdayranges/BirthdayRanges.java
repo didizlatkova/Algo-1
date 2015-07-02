@@ -5,7 +5,7 @@ public class BirthdayRanges {
 	private BinaryIndexedTree tree;
 
 	public BirthdayRanges(int[] array) {
-		this.tree = new BinaryIndexedTree(array);
+		this.tree = new BinaryIndexedTree(array, 512);
 	}
 
 	// adds people who are born on a specific day

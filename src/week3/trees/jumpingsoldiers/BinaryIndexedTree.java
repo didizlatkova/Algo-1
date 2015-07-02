@@ -1,4 +1,4 @@
-package week3.trees.birthdayranges;
+package week3.trees.jumpingsoldiers;
 
 public class BinaryIndexedTree {
 
@@ -12,10 +12,6 @@ public class BinaryIndexedTree {
 
 		originalLength = n;
 		array = new int[n * 2];
-
-		for (int i = 0; i < input.length; i++) {
-			array[originalLength + input[i]]++;
-		}
 
 		for (int i = originalLength - 1; i > 0; i--) {
 			array[i] = array[2 * i] + array[2 * i + 1];
