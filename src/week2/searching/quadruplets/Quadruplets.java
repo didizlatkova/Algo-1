@@ -1,10 +1,36 @@
 package week2.searching.quadruplets;
 
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Quadruplets {
 
-	public static int zeroQuadrupletsCount(int[] a, int[] b, int[] c, int[] d) {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+
+		int n = Integer.parseInt(sc.nextLine());
+		int[] a = new int[n];
+		int[] b = new int[n];
+		int[] c = new int[n];
+		int[] d = new int[n];
+
+		String[] inputA = sc.nextLine().split(" ");
+		String[] inputB = sc.nextLine().split(" ");
+		String[] inputC = sc.nextLine().split(" ");
+		String[] inputD = sc.nextLine().split(" ");
+		sc.close();
+
+		for (int i = 0; i < n; i++) {
+			a[i] = Integer.parseInt(inputA[i]);
+			b[i] = Integer.parseInt(inputB[i]);
+			c[i] = Integer.parseInt(inputC[i]);
+			d[i] = Integer.parseInt(inputD[i]);
+		}
+
+		System.out.println(zeroQuadrupletsCount(a, b, c, d));
+	}
+
+	public static long zeroQuadrupletsCount(int[] a, int[] b, int[] c, int[] d) {
 		int[] combinations = new int[a.length * b.length];
 
 		int index = 0;
@@ -15,18 +41,20 @@ public class Quadruplets {
 			}
 		}
 
-		int count = 0;
-		index = 0;
+		long count = 0;
 		Arrays.sort(combinations);
+
+		int found = 0;
 		for (int i = 0; i < c.length; i++) {
 			for (int j = 0; j < d.length; j++) {
-				int left = 0;
-				int found = binarySearch(combinations,
-						Math.negateExact(c[i] + d[j]), left);
-				while (found != -1) {
+				found = binarySearch(combinations, (c[i] + d[j]) * -1, 0);
+				if (found != -1) {
 					count++;
-					found = binarySearch(combinations,
-							Math.negateExact(c[i] + d[j]), found + 1);
+					while (found + 1 < combinations.length
+							&& combinations[found + 1] == combinations[found]) {
+						count++;
+						found++;
+					}
 				}
 			}
 		}
@@ -38,10 +66,12 @@ public class Quadruplets {
 		int firstOccurrence = -1;
 		int left = start;
 		int right = array.length - 1;
+		int middle = 0;
+		int middleValue = 0;
 
 		while (left <= right) {
-			int middle = left + (right - left) / 2;
-			int middleValue = array[middle];
+			middle = left + (right - left) / 2;
+			middleValue = array[middle];
 
 			if (middleValue > number) {
 				right = middle - 1;

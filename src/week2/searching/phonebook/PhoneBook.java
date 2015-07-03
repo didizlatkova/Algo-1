@@ -30,12 +30,12 @@ public class PhoneBook {
 	}
 
 	public static String[] lookupNames(Contact[] book, int[] numbers) {
-		Contact[] phoneBook = book.clone();
-		Arrays.sort(phoneBook);
+		//Contact[] phoneBook = book.clone();
+		Arrays.sort(book);
 		String[] names = new String[numbers.length];
 
 		for (int i = 0; i < numbers.length; i++) {
-			names[i] = binarySearch(phoneBook, numbers[i]);
+			names[i] = binarySearch(book, numbers[i]);
 		}
 
 		return names;
