@@ -23,20 +23,20 @@ public class Test {
 			ranges[i][1] = ranges[i][0] + rnd.nextInt(366 - ranges[i][0]);
 		}
 
-		int[] result = BirthdayRange.birthdaysCount(birthdays, ranges);
-
-		for (int i = 0; i < ranges.length; i++) {
-			int count = 0;
-			for (int j = 0; j < birthdays.length; j++) {
-				if (birthdays[j] <= ranges[i][1]
-						&& birthdays[j] >= ranges[i][0]) {
-					count++;
-				}
-			}
-			if (result[i] != count) {
-				return false;
-			}
-		}
+//		int[] result = BirthdayRange.birthdaysCount(birthdays, ranges);
+//
+//		for (int i = 0; i < ranges.length; i++) {
+//			int count = 0;
+//			for (int j = 0; j < birthdays.length; j++) {
+//				if (birthdays[j] <= ranges[i][1]
+//						&& birthdays[j] >= ranges[i][0]) {
+//					count++;
+//				}
+//			}
+//			if (result[i] != count) {
+//				return false;
+//			}
+//		}
 		
 		return true;
 	}
