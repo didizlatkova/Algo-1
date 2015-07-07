@@ -34,13 +34,13 @@ public class Test {
 		lists.add(list2.getFirstNode());
 		lists.add(list3.getFirstNode());
 		
-		Node result = KLists.merge(lists);
-		
-		System.out.println(result.value);
-		while (result.nextNode != null) {
-			result = result.nextNode;
-			System.out.println(result.value);			
-		}
+//		Node result = KLists.merge(lists);
+//		
+//		System.out.println(result.value);
+//		while (result.nextNode != null) {
+//			result = result.nextNode;
+//			System.out.println(result.value);			
+//		}
 	}
 
 }
