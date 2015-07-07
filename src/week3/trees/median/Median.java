@@ -1,33 +1,32 @@
 package week3.trees.median;
 
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Median {
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+	public static void main(String[] args) throws NumberFormatException, IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				System.in));
+		int n = Integer.parseInt(reader.readLine());
+		String[] input = reader.readLine().split(" ");
+		reader.close();
 
-		int n = Integer.parseInt(sc.nextLine());
-		String[] input = sc.nextLine().split(" ");
-		for (int i = 0; i < n; i++) {
+		median = Integer.parseInt(input[0]);
+		System.out.println(median);
+		for (int i = 1; i < n; i++) {
 			System.out.println(insert(Integer.parseInt(input[i])));
 		}
 
-		sc.close();
 	}
 
-	private static MinHeap minHeap = new MinHeap(50);
-	private static MaxHeap maxHeap = new MaxHeap(50);
+	private static MinHeap minHeap = new MinHeap(500000);
+	private static MaxHeap maxHeap = new MaxHeap(500000);
 	private static int median;
-	private static boolean medianInitialized;
 
 	// inserts the number and returns the median
 	public static int insert(int number) {
-		if (minHeap.isEmpty() && maxHeap.isEmpty() && !medianInitialized) {
-			medianInitialized = true;
-			median = number;
-			return median;
-		}
 		if (number < median) {
 			maxHeap.insert(number);
 		} else {
@@ -41,7 +40,7 @@ public class Median {
 			return median;
 		}
 
-		if (maxHeap.size() - minHeap.size() >= 2) {
+		if (maxHeap.size() - minHeap.size() == 2) {
 			minHeap.insert(median);
 			median = maxHeap.getMax();
 			maxHeap.removeMax();
@@ -60,18 +59,10 @@ public class Median {
 		}
 
 		public int getMax() {
-			if (accommodated == 0) {
-				throw new IndexOutOfBoundsException();
-			}
-
 			return array[1];
 		}
 
 		public void insert(int element) {
-			if (accommodated == array.length) {
-				throw new IndexOutOfBoundsException();
-			}
-
 			accommodated++;
 			int index = accommodated;
 			array[index] = element;
@@ -90,17 +81,6 @@ public class Median {
 			int save = array[i];
 			array[i] = array[j];
 			array[j] = save;
-		}
-
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			sb.append("[");
-			for (int i = 1; i < array.length; i++) {
-				sb.append(array[i] + ", ");
-			}
-			sb.append("]");
-
-			return sb.toString();
 		}
 
 		public void removeMax() {
@@ -128,10 +108,6 @@ public class Median {
 			}
 		}
 
-		public boolean isEmpty() {
-			return accommodated == 0;
-		}
-
 		public int size() {
 			return accommodated;
 		}
@@ -148,18 +124,10 @@ public class Median {
 		}
 
 		public int getMin() {
-			if (accommodated == 0) {
-				throw new IndexOutOfBoundsException();
-			}
-
 			return array[1];
 		}
 
 		public void insert(int element) {
-			if (accommodated == array.length) {
-				throw new IndexOutOfBoundsException();
-			}
-
 			accommodated++;
 			int index = accommodated;
 			array[index] = element;
@@ -178,17 +146,6 @@ public class Median {
 			int save = array[i];
 			array[i] = array[j];
 			array[j] = save;
-		}
-
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			sb.append("[");
-			for (int i = 1; i < array.length; i++) {
-				sb.append(array[i] + ", ");
-			}
-			sb.append("]");
-
-			return sb.toString();
 		}
 
 		public void removeMin() {
@@ -214,10 +171,6 @@ public class Median {
 					break;
 				}
 			}
-		}
-
-		public boolean isEmpty() {
-			return accommodated == 0;
 		}
 
 		public int size() {

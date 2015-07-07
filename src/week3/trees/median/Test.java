@@ -1,20 +1,16 @@
 package week3.trees.median;
 
+import java.util.Random;
+
 public class Test {
 
 	public static void main(String[] args) {
-		
-		System.out.println(Median.insert(5));
-		System.out.println(Median.insert(6));
-		System.out.println(Median.insert(7));
-		System.out.println(Median.insert(4));
-		System.out.println(Median.insert(3));
-		
-		System.out.println(Median.insert(10));
-		System.out.println(Median.insert(20));
-		System.out.println(Median.insert(30));
-		System.out.println(Median.insert(40));
-		System.out.println(Median.insert(50));
+
+		int n = 1000;
+		Random rnd = new Random();
+		for (int i = 0; i < n; i++) {
+			System.out.println(i + ": " + Median.insert(rnd.nextInt(1000)));
+		}
 	}
 
 }
