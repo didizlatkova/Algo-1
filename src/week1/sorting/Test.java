@@ -21,9 +21,6 @@ public class Test {
 
 		SortingAlgorithm quick = new QuickSort();
 		System.out.println("Quick: " + test(quick));
-
-		SortingAlgorithm heap = new HeapSort();
-		System.out.println("Heap: " + test(heap));
 	}
 
 	public static boolean test(SortingAlgorithm algorithm) {
