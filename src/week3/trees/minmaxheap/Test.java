@@ -13,7 +13,7 @@ public class Test {
 		node.right.right = new Node(9);
 		node.right.right.right = new Node(10);
 		
-		System.out.println(MinMaxHeap.isMinMax(node));
+	//	System.out.println(MinMaxHeap.isMinMax(node));
 	}
 
 }
