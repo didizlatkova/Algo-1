@@ -11,7 +11,7 @@ public class Test {
 		node.right.right = new Node(20);
 		node.right.right.right = new Node(21);
 		
-		System.out.println(BST.isBST(node));
+		//System.out.println(BST.isBST(node));
 	}
 
 }
