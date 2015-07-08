@@ -1,43 +1,41 @@
 package week2.binarytrees.klists;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 public class KLists {
 	
-	public static void main(String[] args) {
-		// 3 -> 5 -> 7 -> 9,	
-		LinkedList list1 = new LinkedList();
-		list1.add(3);
-		list1.add(5);
-		list1.add(7);
-		list1.add(9);
+	public static void main(String[] args) throws NumberFormatException, IOException {
 		
-		// 2 -> 4 -> 6,
-		LinkedList list2 = new LinkedList();
-		list2.add(2);
-		list2.add(4);
-		list2.add(6);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				System.in));
 		
-		// 0 -> 1 -> 8 -> 10
-		LinkedList list3 = new LinkedList();
-		list3.add(0);
-		list3.add(1);
-		list3.add(8);
-		list3.add(10);
-				
+		int k = Integer.parseInt(reader.readLine());
 		List<Node> lists = new ArrayList<Node>();
-		lists.add(list1.getFirstNode());
-		lists.add(list2.getFirstNode());
-		lists.add(list3.getFirstNode());
+		
+		for (int i = 0; i < k; i++) {
+			LinkedList list = new LinkedList();
+			String[] input = reader.readLine().split(" ");
+			for (int j = 0; j < input.length - 1; j++) {
+				list.add(Integer.parseInt(input[j]));
+			}
+			lists.add(list.getFirstNode());
+		}
 		
 		Node result = KLists.merge(lists);
+		StringBuilder sb = new StringBuilder();
 		
-		System.out.println(result.value);
-		while (result.nextNode != null) {
+		sb.append(result.value + " ");
+		while (result.nextNode.nextNode != null) {
 			result = result.nextNode;
-			System.out.println(result.value);			
+			sb.append(result.value + " ");			
 		}
+		
+		sb.append(result.nextNode.value);
+		System.out.println(sb.toString());
 	}
 
 	// Merge K sorted lists.
@@ -171,14 +169,12 @@ public class KLists {
 	private static class LinkedList {
 
 		private Node first;
-		private int size = 0;
 
 		public Node getFirstNode() {
 			return this.first;
 		}
 
 		public void add(int value) {
-			size++;
 			if (first == null) {
 				first = new Node(value);
 				return;
