@@ -5,17 +5,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class PhoneBook {
-	
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				System.in));
-		
-		int n = Integer.parseInt(reader.readLine());		
+
+		int n = Integer.parseInt(reader.readLine());
 		String input;
-		
+
 		for (int i = 0; i < n; i++) {
 			input = reader.readLine();
-			CommandParser.parse(input);			
+			CommandParser.parse(input);
 		}
 	}
 
@@ -62,6 +62,10 @@ public class PhoneBook {
 	}
 
 	private ContactNode lookupNode(String name) {
+		if (firstNode == null) {
+			return null;
+		}
+
 		ContactNode nextNode = firstNode;
 		while (true) {
 			if (name.compareTo(nextNode.value.name) < 0) {
@@ -113,9 +117,9 @@ public class PhoneBook {
 			node.left = node.left.left;
 		} else if (node.right != null && node.left == null) {
 			node.value = node.right.value;
-			node.right =  node.right.right;
+			node.right = node.right.right;
 		} else {
-			ContactNode replacement = leftMostChild(node.right);			
+			ContactNode replacement = leftMostChild(node.right);
 			remove(replacement);
 			node.value = replacement.value;
 		}
@@ -150,7 +154,7 @@ public class PhoneBook {
 		}
 		return node;
 	}
-	
+
 	private static class CommandParser {
 
 		private static PhoneBook phoneBook = new PhoneBook();
@@ -169,7 +173,7 @@ public class PhoneBook {
 
 		private static void insert(String command) {
 			String[] contactArray = command.split(" ");
-			int number =  Integer.parseInt(contactArray[1]);
+			int number = Integer.parseInt(contactArray[1]);
 			String name = contactArray[2];
 			Contact contact = new Contact(name, number);
 			phoneBook.insert(contact);
@@ -188,7 +192,7 @@ public class PhoneBook {
 		}
 
 	}
-	
+
 	private static class Contact {
 
 		public String name;
@@ -200,7 +204,7 @@ public class PhoneBook {
 		}
 
 	}
-	
+
 	private static class ContactNode {
 
 		public Contact value;

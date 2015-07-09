@@ -20,7 +20,7 @@ public class BandwidthManager {
 		}
 	}
 
-	private static PriorityQueue queue = new PriorityQueue(100);
+	private static PriorityQueue queue = new PriorityQueue(100000);
 	private static HashMap<String, Integer> protocolPriorities;
 
 	static {
@@ -35,17 +35,12 @@ public class BandwidthManager {
 
 	// receives a packet with specified protocol and payload
 	public static void rcv(String protocol, String payload) {
-		if (protocolPriorities.get(protocol) == null) {
-			throw new IllegalArgumentException("Invalid command");
-		}
-
 		queue.insert(payload, protocolPriorities.get(protocol));
 	}
 
 	// returns the payload of the packet which should be sent
 	public static String send() {
 		if (!queue.isEmpty()) {
-
 			String payload = queue.getMin();
 			queue.removeMin();
 			return payload;
@@ -83,18 +78,10 @@ public class BandwidthManager {
 		}
 
 		public String getMin() {
-			if (accommodated == 0) {
-				throw new IndexOutOfBoundsException();
-			}
-
 			return array[1].value;
 		}
 
 		public void insert(String element, int priority) {
-			if (accommodated == array.length) {
-				throw new IndexOutOfBoundsException();
-			}
-
 			accommodated++;
 			int index = accommodated;
 			array[index] = new QueueElement(element, priority);
