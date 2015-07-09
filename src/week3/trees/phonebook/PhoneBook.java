@@ -1,6 +1,23 @@
 package week3.trees.phonebook;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class PhoneBook {
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				System.in));
+		
+		int n = Integer.parseInt(reader.readLine());		
+		String input;
+		
+		for (int i = 0; i < n; i++) {
+			input = reader.readLine();
+			CommandParser.parse(input);			
+		}
+	}
 
 	private ContactNode firstNode;
 
@@ -132,6 +149,68 @@ public class PhoneBook {
 			node = node.left;
 		}
 		return node;
+	}
+	
+	private static class CommandParser {
+
+		private static PhoneBook phoneBook = new PhoneBook();
+
+		public static void parse(String command) {
+			if (command.startsWith("insert")) {
+				insert(command);
+			} else if (command.startsWith("lookup")) {
+				lookup(command);
+			} else if (command.startsWith("remove")) {
+				remove(command);
+			} else if (command.equals("list")) {
+				phoneBook.list();
+			}
+		}
+
+		private static void insert(String command) {
+			String[] contactArray = command.split(" ");
+			int number =  Integer.parseInt(contactArray[1]);
+			String name = contactArray[2];
+			Contact contact = new Contact(name, number);
+			phoneBook.insert(contact);
+		}
+
+		private static void lookup(String command) {
+			String[] array = command.split(" ");
+			String name = array[1];
+			phoneBook.lookup(name);
+		}
+
+		private static void remove(String command) {
+			String[] array = command.split(" ");
+			String name = array[1];
+			phoneBook.remove(name);
+		}
+
+	}
+	
+	private static class Contact {
+
+		public String name;
+		public int number;
+
+		public Contact(String name, int number) {
+			this.name = name;
+			this.number = number;
+		}
+
+	}
+	
+	private static class ContactNode {
+
+		public Contact value;
+		public ContactNode left;
+		public ContactNode right;
+
+		public ContactNode(Contact value) {
+			this.value = value;
+		}
+
 	}
 
 }
