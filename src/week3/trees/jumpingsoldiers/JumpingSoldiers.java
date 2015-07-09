@@ -1,26 +1,28 @@
 package week3.trees.jumpingsoldiers;
 
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class JumpingSoldiers {
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+	public static void main(String[] args) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				System.in));
 
-		String[] limits = sc.nextLine().split(" ");
+		String[] limits = reader.readLine().split(" ");
 		int n = Integer.parseInt(limits[0]);
 		int k = Integer.parseInt(limits[1]);
 		int[][] soldiers = new int[k][n];
 
 		for (int i = 0; i < k; i++) {
-			String[] row = sc.nextLine().split(" ");
+			String[] row = reader.readLine().split(" ");
 			for (int j = 0; j < n; j++) {
 				soldiers[i][j] = Integer.parseInt(row[j]);
 			}
 		}
 
 		System.out.println(mostJumps(soldiers));
-		sc.close();
 	}
 
 	public static int mostJumps(int[][] soldiers) {
