@@ -6,17 +6,18 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 
 public class BandwidthManager {
-	
-	public static void main(String[] args) throws NumberFormatException, IOException {
+
+	public static void main(String[] args) throws NumberFormatException,
+			IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				System.in));
-		
-		int n = Integer.parseInt(reader.readLine());		
+
+		int n = Integer.parseInt(reader.readLine());
 		String input;
-		
+
 		for (int i = 0; i < n; i++) {
 			input = reader.readLine();
-			CommandParser.parse(input);			
+			CommandParser.parse(input);
 		}
 	}
 
@@ -48,7 +49,7 @@ public class BandwidthManager {
 
 		return "Nothing to send!";
 	}
-	
+
 	private static class CommandParser {
 
 		public static void parse(String command) {
@@ -62,12 +63,13 @@ public class BandwidthManager {
 		private static void receive(String command) {
 			String[] array = command.split(" ");
 			String protocol = array[1];
-			String payload = array[2];
+			String payload = command.substring(5 + protocol.length(),
+					command.length());
 			BandwidthManager.rcv(protocol, payload);
 		}
 
 	}
-	
+
 	private static class PriorityQueue {
 
 		private QueueElement[] array;
@@ -122,16 +124,22 @@ public class BandwidthManager {
 			while (index * 2 <= accommodated) {
 				if (index * 2 + 1 <= accommodated) {
 					if (array[index * 2].priority > array[index * 2 + 1].priority
-							&& array[index].priority > array[index * 2 + 1].priority) {
+							&& array[index].priority >= array[index * 2 + 1].priority) {
 						switchElements(index, index * 2 + 1);
 						index = index * 2 + 1;
 						continue;
 					}
 				}
 
-				if (array[index].priority > array[index * 2].priority) {
+				if (array[index].priority >= array[index * 2].priority) {
 					switchElements(index, index * 2);
-					index *= 2;
+					if (index * 2 + 1 <= accommodated
+							&& array[index * 2].priority == array[index * 2 + 1].priority) {
+						switchElements(index * 2, index * 2 + 1);
+						index = index * 2 + 1;
+					} else {
+						index *= 2;
+					}
 				} else {
 					break;
 				}
@@ -143,7 +151,7 @@ public class BandwidthManager {
 		}
 
 	}
-	
+
 	private static class QueueElement {
 
 		public String value;

@@ -1,14 +1,15 @@
-package week5.spanningtrees.powersupply;
+package week5.spanningtrees.secondbest;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PowerSupply {
+public class SecondBestMST {
 
 	public static void main(String[] args) throws NumberFormatException,
 			IOException {
@@ -18,6 +19,7 @@ public class PowerSupply {
 		int n = Integer.parseInt(reader.readLine());
 		Map<Integer, List<QueueElement>> adjList = new HashMap<Integer, List<QueueElement>>();
 		String[] input;
+		List<Integer> allWeights = new ArrayList<Integer>();
 
 		for (int i = 0; i < n; i++) {
 			input = reader.readLine().split(" ");
@@ -34,31 +36,33 @@ public class PowerSupply {
 				adjList.put(secondNode, new ArrayList<QueueElement>());
 			}
 			adjList.get(secondNode).add(new QueueElement(firstNode, weight));
+
+			allWeights.add(weight);
 		}
 
-		System.out.println(minCableLength(adjList, n));
+		System.out.println(secondBest(adjList, n, allWeights));
 	}
 
-	private static int minCableLength(Map<Integer, List<QueueElement>> adjList,
-			int n) {
+	private static int secondBest(Map<Integer, List<QueueElement>> adjList,
+			int n, List<Integer> allWeights) {
 		PriorityQueue queue = new PriorityQueue(n);
 		List<Integer> keys = new ArrayList<Integer>(adjList.keySet());
 		int node = keys.get(0);
 		boolean[] visited = new boolean[n];
 		visited[node] = true;
-		int cableSum = 0;
+		List<Integer> sums = new ArrayList<Integer>();
 
 		do {
-			int unvisitedNodes = 0;
+			int countUnvisitedNodes = 0;
 			for (int i = 0; i < adjList.get(node).size(); i++) {
 				if (!visited[adjList.get(node).get(i).value]) {
 					queue.insert(adjList.get(node).get(i).value,
 							adjList.get(node).get(i).priority);
-					unvisitedNodes++;
+					countUnvisitedNodes++;
 				}
 			}
 
-			if (unvisitedNodes != 0) {
+			if (countUnvisitedNodes != 0) {
 				int sumToAdd = 0;
 				do {
 					node = queue.getMin().value;
@@ -66,13 +70,26 @@ public class PowerSupply {
 					queue.removeMin();
 				} while (visited[node] && !queue.isEmpty());
 				visited[node] = true;
-				cableSum += sumToAdd;
+				sums.add(sumToAdd);
+				allWeights.remove(sumToAdd);
 			} else {
 				queue.removeMin();
 			}
 		} while (!queue.isEmpty());
 
-		return cableSum;
+		int minAddedWeight = Collections.min(sums);
+		int maxUnaddedWeight = 0;
+		do {
+			maxUnaddedWeight = Collections.max(allWeights);
+		} while (sums.contains(maxUnaddedWeight)
+				|| maxUnaddedWeight == minAddedWeight);
+
+		int finalSum = 0;
+		for (int i = 0; i < sums.size(); i++) {
+			finalSum += sums.get(i);
+		}
+
+		return finalSum - minAddedWeight + maxUnaddedWeight;
 	}
 
 	private static class PriorityQueue {

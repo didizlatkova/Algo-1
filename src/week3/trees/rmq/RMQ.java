@@ -80,7 +80,7 @@ public class RMQ {
 		endIndex += originalLength;
 
 		while (startIndex < endIndex) {
-			if ((startIndex) % 2 == 1) {
+			if (startIndex % 2 == 1) {
 				// right child
 				min = Math.min(min, array[startIndex]);
 				startIndex++;
