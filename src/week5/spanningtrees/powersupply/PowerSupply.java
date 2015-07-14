@@ -68,6 +68,7 @@ public class PowerSupply {
 				visited[node] = true;
 				cableSum += sumToAdd;
 			} else {
+				node = queue.getMin().value;
 				queue.removeMin();
 			}
 		} while (!queue.isEmpty());
