@@ -26,15 +26,15 @@ public class Test {
 		}
 
 		BuildScripts scripts = new BuildScripts();
-		List<Integer> order = scripts.getBuildOrder(map.get(wanted), graph);
+		//List<Integer> order = scripts.getBuildOrder(map.get(wanted), graph);
 
-		if (order == null) {
-			System.out.print("BUILD ERROR");
-		} else {
-			for (int i = 0; i < order.size(); i++) {
-				System.out.print(projects[order.get(i)] + " ");
-			}
-		}
+//		if (order == null) {
+//			System.out.print("BUILD ERROR");
+//		} else {
+//			for (int i = 0; i < order.size(); i++) {
+//				System.out.print(projects[order.get(i)] + " ");
+//			}
+//		}
 
 		sc.close();
 	}
