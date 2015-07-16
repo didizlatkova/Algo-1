@@ -1,88 +1,102 @@
 package week4.graphs.pouringglasses;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.Scanner;
+import java.util.LinkedList;
 import java.util.Stack;
-
-import week1.queue.Queue;
 
 public class PouringGlasses {
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		String[] capacitiesInput = sc.nextLine().split(" ");
-		String[] waterInput = sc.nextLine().split(" ");
+	public static void main(String[] args) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				System.in));
+		String[] capacitiesInput = reader.readLine().split(" ");
+		String[] waterInput = reader.readLine().split(" ");
 		int[] capacities = new int[3];
 		int[] water = new int[3];
 		for (int i = 0; i < 3; i++) {
 			capacities[i] = Integer.parseInt(capacitiesInput[i]);
 			water[i] = Integer.parseInt(waterInput[i]);
 		}
-		int wanted = Integer.parseInt(sc.nextLine());
+		int wanted = Integer.parseInt(reader.readLine());
 		calculate(capacities, water, wanted);
-		sc.close();
 	}
 
 	private static HashMap<Integer, Combination> map = new HashMap<Integer, Combination>();
 	private static int combinationsCount = 0;
-	private static boolean[][] graph;
-	private static int pathLengths[];
-	private static boolean[][][] visited;
-	private static Queue queue = new Queue();
-	private static String[][][] steps;
-	private static Combination[][][] parents;
+	private static HashMap<Integer, Integer> pathLengths = new HashMap<Integer, Integer>();
+	private static HashMap<Combination, Boolean> visited = new HashMap<Combination, Boolean>();
+	private static LinkedList<Integer> queue = new LinkedList<Integer>();
+	private static HashMap<Combination, String> steps = new HashMap<Combination, String>();
+	private static HashMap<Combination, Combination> parents = new HashMap<Combination, Combination>();
+	private static int wanted;
 
 	private static void addCombination(int parent, int glassOne, int glassTwo,
 			int glassThree, String step) {
-		if (!visited[glassOne][glassTwo][glassThree]) {
-			visited[glassOne][glassTwo][glassThree] = true;
-			Combination newCombination = new Combination(glassOne, glassTwo,
-					glassThree);
-			combinationsCount++;
-			map.put(combinationsCount, newCombination);
-			graph[parent][combinationsCount] = true;
-			pathLengths[combinationsCount] = pathLengths[parent] + 1;
-			queue.push(combinationsCount);
-			steps[glassOne][glassTwo][glassThree] = step;
-			parents[glassOne][glassTwo][glassThree] = map.get(parent);
-		}
-	}
+		Combination newCombination = new Combination(glassOne, glassTwo,
+				glassThree);
+		if (!visited.containsKey(newCombination)) {
+			if (newCombination.glass1 == wanted
+					|| newCombination.glass2 == wanted
+					|| newCombination.glass3 == wanted) {
+				System.out.println(pathLengths.get(parent) + 1);
 
-	private static void calculate(int[] capacities, int[] water, int wanted) {
-		int allCombinations = 1;
-		for (int i = 0; i < capacities.length; i++) {
-			allCombinations *= capacities[i];
-		}
-		graph = new boolean[allCombinations][allCombinations];
-		steps = new String[allCombinations][allCombinations][allCombinations];
-		visited = new boolean[allCombinations][allCombinations][allCombinations];
-		parents = new Combination[allCombinations][allCombinations][allCombinations];
-		Combination startCombination = new Combination(water[0], water[1],
-				water[2]);
-		map.put(0, startCombination);
-		pathLengths = new int[graph.length];
-		queue.push(combinationsCount);
-
-		while (queue.size() > 0) {
-			int current = queue.pop();
-			Combination currentCombination = map.get(current);
-			if (currentCombination.glass1 == wanted
-					|| currentCombination.glass2 == wanted
-					|| currentCombination.glass3 == wanted) {
-				System.out.println(pathLengths[current]);
+				steps.put(newCombination, step);
+				parents.put(newCombination, map.get(parent));
 
 				Stack<String> pouringHistory = new Stack<String>();
-				while (currentCombination != null) {
-					pouringHistory
-							.push(steps[currentCombination.glass1][currentCombination.glass2][currentCombination.glass3]);
-					currentCombination = parents[currentCombination.glass1][currentCombination.glass2][currentCombination.glass3];
+				while (steps.containsKey(newCombination)) {
+					pouringHistory.push(steps.get(newCombination));
+					newCombination = parents.get(newCombination);
 				}
 
 				while (!pouringHistory.isEmpty()) {
 					System.out.println(pouringHistory.pop());
 				}
-				return;
+				System.exit(0);
 			}
+			visited.put(newCombination, true);
+
+			combinationsCount++;
+			map.put(combinationsCount, newCombination);
+			pathLengths.put(combinationsCount, pathLengths.get(parent) + 1);
+			queue.add(combinationsCount);
+			steps.put(newCombination, step);
+			parents.put(newCombination, map.get(parent));
+		}
+	}
+
+	private static void calculate(int[] capacities, int[] water,
+			int wantedAmount) {
+		wanted = wantedAmount;
+		Combination startCombination = new Combination(water[0], water[1],
+				water[2]);
+		map.put(0, startCombination);
+		pathLengths.put(0, 0);
+		queue.add(0);
+		Combination currentCombination = map.get(0);
+		if (currentCombination.glass1 == wanted
+				|| currentCombination.glass2 == wanted
+				|| currentCombination.glass3 == wanted) {
+			System.out.println(pathLengths.get(0));
+
+			Stack<String> pouringHistory = new Stack<String>();
+			while (steps.containsKey(currentCombination)) {
+				pouringHistory.push(steps.get(currentCombination));
+				currentCombination = parents.get(currentCombination);
+			}
+
+			while (!pouringHistory.isEmpty()) {
+				System.out.println(pouringHistory.pop());
+			}
+			return;
+		}
+
+		while (!queue.isEmpty()) {
+			int current = queue.poll();
+			currentCombination = map.get(current);
 
 			int amountToPour = 0;
 
