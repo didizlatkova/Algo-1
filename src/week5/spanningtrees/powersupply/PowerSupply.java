@@ -49,26 +49,22 @@ public class PowerSupply {
 		int cableSum = 0;
 
 		do {
-			int unvisitedNodes = 0;
 			for (int i = 0; i < adjList.get(node).size(); i++) {
 				if (!visited[adjList.get(node).get(i).value]) {
 					queue.insert(adjList.get(node).get(i).value,
 							adjList.get(node).get(i).priority);
-					unvisitedNodes++;
 				}
 			}
 
-			if (unvisitedNodes != 0) {
-				int sumToAdd = 0;
-				do {
-					node = queue.getMin().value;
-					sumToAdd = queue.getMin().priority;
-					queue.removeMin();
-				} while (visited[node] && !queue.isEmpty());
+			int sumToAdd = 0;
+			do {
+				node = queue.getMin().value;
+				sumToAdd = queue.getMin().priority;
+				queue.removeMin();
+			} while (visited[node] && !queue.isEmpty());
+			if (!visited[node]) {
 				visited[node] = true;
 				cableSum += sumToAdd;
-			} else {
-				queue.removeMin();
 			}
 		} while (!queue.isEmpty());
 
