@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,7 @@ public class SecondBestMST {
 		int n = Integer.parseInt(reader.readLine());
 		Map<Integer, List<QueueElement>> adjList = new HashMap<Integer, List<QueueElement>>();
 		String[] input;
-		List<Integer> allWeights = new ArrayList<Integer>();
+		List<Integer> nodes = new ArrayList<Integer>();
 
 		for (int i = 0; i < n; i++) {
 			input = reader.readLine().split(" ");
@@ -29,6 +28,7 @@ public class SecondBestMST {
 
 			if (!adjList.containsKey(firstNode)) {
 				adjList.put(firstNode, new ArrayList<QueueElement>());
+				nodes.add(firstNode);
 			}
 			adjList.get(firstNode).add(new QueueElement(secondNode, weight));
 
@@ -36,21 +36,19 @@ public class SecondBestMST {
 				adjList.put(secondNode, new ArrayList<QueueElement>());
 			}
 			adjList.get(secondNode).add(new QueueElement(firstNode, weight));
-
-			allWeights.add(weight);
 		}
 
-		System.out.println(secondBest(adjList, n, allWeights));
+		System.out.println(secondBest(adjList, n, nodes));
 	}
 
 	private static int secondBest(Map<Integer, List<QueueElement>> adjList,
-			int n, List<Integer> allWeights) {
+			int n, List<Integer> nodes) {
 		PriorityQueue queue = new PriorityQueue(n);
 		List<Integer> keys = new ArrayList<Integer>(adjList.keySet());
 		int node = keys.get(0);
 		boolean[] visited = new boolean[n];
 		visited[node] = true;
-		List<Integer> sums = new ArrayList<Integer>();
+		int sum = 0;
 
 		do {
 			int countUnvisitedNodes = 0;
@@ -62,6 +60,7 @@ public class SecondBestMST {
 				}
 			}
 
+			int saveNode = node;
 			if (countUnvisitedNodes != 0) {
 				int sumToAdd = 0;
 				do {
@@ -70,26 +69,93 @@ public class SecondBestMST {
 					queue.removeMin();
 				} while (visited[node] && !queue.isEmpty());
 				visited[node] = true;
-				sums.add(sumToAdd);
-				allWeights.remove(sumToAdd);
+				sum += sumToAdd;
+				for (QueueElement element : adjList.get(saveNode)) {
+					if (element.value == node) {
+						element.inMinSpanningTree = true;
+						break;
+					}
+				}
+				nodes.remove((Object) node);
 			} else {
 				queue.removeMin();
 			}
 		} while (!queue.isEmpty());
 
-		int minAddedWeight = Collections.min(sums);
-		int maxUnaddedWeight = 0;
-		do {
-			maxUnaddedWeight = Collections.max(allWeights);
-		} while (sums.contains(maxUnaddedWeight)
-				|| maxUnaddedWeight == minAddedWeight);
+		// looking for min P-y+x
+		int x = 0;
+		int y = 0;
+		int min = Integer.MAX_VALUE;
 
-		int finalSum = 0;
-		for (int i = 0; i < sums.size(); i++) {
-			finalSum += sums.get(i);
+		for (int i : keys) {
+			for (int j = 0; j < adjList.get(i).size(); j++) {
+				if (adjList.get(i).get(j) != null
+						&& i < adjList.get(i).get(j).value
+						&& !adjList.get(i).get(j).inMinSpanningTree) {
+					cycle = new ArrayList<Integer>();
+					visitedDFS = new boolean[n];
+					x = adjList.get(i).get(j).priority;
+					y = Integer.MIN_VALUE;
+					dfs(adjList, adjList.get(i).get(j).value, i);
+					for (int k = 1; k < cycle.size() - 1; k++) {
+						int currentWeight = adjList.get(cycle.get(k)).get(
+								cycle.get(k + 1)).priority;
+						if (currentWeight != x && y < currentWeight) {
+							y = currentWeight;
+						}
+					}
+
+					if (x - y < min) {
+						min = x - y;
+					}
+				}
+			}
 		}
 
-		return finalSum - minAddedWeight + maxUnaddedWeight;
+		// for (Integer outsideNode : nodes) {
+		// cycle = new ArrayList<Integer>();
+		// visitedDFS = new boolean[n];
+		// dfs(adjList, outsideNode, outsideNode, nodes);
+		// x = adjList.get(cycle.get(0)).get(cycle.get(1)).priority;
+		// y = Integer.MIN_VALUE;
+		// for (int i = 1; i < cycle.size() - 1; i++) {
+		// int currentWeight = adjList.get(cycle.get(i)).get(
+		// cycle.get(i + 1)).priority;
+		// if (currentWeight != x && y < currentWeight) {
+		// y = currentWeight;
+		// }
+		// }
+		//
+		// if (x - y < min) {
+		// min = x - y;
+		// }
+		// }
+
+		return sum + min;
+	}
+
+	private static List<Integer> cycle;
+	private static boolean[] visitedDFS;
+
+	private static boolean dfs(Map<Integer, List<QueueElement>> adjList,
+			int node, int startingNode) {
+		if (node == startingNode) {
+			return true;
+		}
+
+		visitedDFS[node] = true;
+		cycle.add(node);
+		for (int i = 0; i < adjList.get(node).size(); i++) {
+			int currentNode = adjList.get(node).get(i).value;
+			if (!visitedDFS[currentNode]
+					&& adjList.get(node).get(i).inMinSpanningTree) {
+				if (!dfs(adjList, currentNode, startingNode)) {
+					cycle.remove((Object) currentNode);
+				}
+			}
+		}
+
+		return false;
 	}
 
 	private static class PriorityQueue {
@@ -180,10 +246,12 @@ public class SecondBestMST {
 
 		public int value;
 		public int priority;
+		public boolean inMinSpanningTree;
 
 		public QueueElement(int value, int priority) {
 			this.value = value;
 			this.priority = priority;
+			this.inMinSpanningTree = false;
 		}
 
 	}
