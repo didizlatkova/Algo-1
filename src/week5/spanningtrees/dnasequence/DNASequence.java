@@ -15,61 +15,54 @@ public class DNASequence {
 				System.in));
 
 		int n = Integer.parseInt(reader.readLine());
-		HashMap<Integer, Sequence> map = new HashMap<Integer, Sequence>();
-		int mapCounter = 0;
+		HashMap<String, List<Sequence>> map = new HashMap<String, List<Sequence>>();
 		String nucleotides;
-		Sequence sequence;
-		List<Integer> keys;
+		String front;
+		String middle;
+		String back;
 		for (int i = 0; i < n; i++) {
 			nucleotides = reader.readLine();
-			sequence = new Sequence(nucleotides);
-			keys = new ArrayList<Integer>(map.keySet());
-			for (Integer key : keys) {
-				if (sequence.front == map.get(key).front
-						|| sequence.front == map.get(key).back) {
-					sequence.frontConnections.add(key);
-				}
-				if (sequence.back == map.get(key).front
-						|| sequence.back == map.get(key).back) {
-					sequence.backConnections.add(key);
-				}
+			front = nucleotides.substring(0, 3);
+			middle = nucleotides.substring(3, nucleotides.length() - 3);
+			back = nucleotides.substring(nucleotides.length() - 3,
+					nucleotides.length());
+			if (!map.containsKey(front)) {
+				map.put(front, new ArrayList<Sequence>());
 			}
-			map.put(mapCounter, sequence);
-			mapCounter++;
+			if (!map.containsKey(back)) {
+				map.put(back, new ArrayList<Sequence>());
+			}
+
+			map.get(front).add(new Sequence(middle, back));
+			map.get(back).add(new Sequence(middle, front));
 		}
 	}
 
-	private static String restoreSequence(HashMap<Integer, Sequence> map) {
-		List<Integer> keys = new ArrayList<Integer>(map.keySet());
+	private static String restoreSequence(HashMap<String, List<Sequence>> map) {
+		HashMap<String, Boolean> visited = new HashMap<String, Boolean>();
+		
+		List<String> keys = new ArrayList<String>(map.keySet());
 		String restoredSequence;
-		int singleConnections = 0;
-		
-		for (Integer key : keys) {
-			if (map.get(key).frontConnections.size() == 0 && map.get(key).backConnections.size() == 0) {
-				return "IMPOSSIBLE";
+		String startNode = keys.get(0);
+
+		for (String key : keys) {
+			if (map.get(key).size() == 1) {
+				startNode = key;
+				break;
 			}
-			if (map.get(key).frontConnections.size() == 0 || map.get(key).backConnections.size() == 0) {
-				singleConnections = key;
-			}
-		}
+		}	
 		
-		
-		
+
 		return "";
 	}
 
 	private static class Sequence {
-		public String front;
-		public String back;
-		public String middle;
-		public List<Integer> frontConnections = new ArrayList<Integer>();
-		public List<Integer> backConnections = new ArrayList<Integer>();
+		public String value;
+		public String node;
 
-		public Sequence(String nucleotides) {
-			front = nucleotides.substring(0, 3);
-			back = nucleotides.substring(nucleotides.length() - 3,
-					nucleotides.length());
-			middle = nucleotides.substring(3, nucleotides.length() - 3);
+		public Sequence(String value, String node) {
+			this.node = node;
+			this.value = value;
 		}
 	}
 
