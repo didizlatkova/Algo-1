@@ -74,6 +74,8 @@ public class BandwidthManager {
 
 		private QueueElement[] array;
 		private int accommodated = 0;
+		private static int timestamp = 0;
+		private static final int maxCommands = 100000;
 
 		public PriorityQueue(int capacity) {
 			array = new QueueElement[capacity + 1];
@@ -86,7 +88,8 @@ public class BandwidthManager {
 		public void insert(String element, int priority) {
 			accommodated++;
 			int index = accommodated;
-			array[index] = new QueueElement(element, priority);
+			array[index] = new QueueElement(element, maxCommands * priority + timestamp);
+			timestamp++;
 
 			while (index / 2 > 0) {
 				if (array[index].priority < array[index / 2].priority) {
@@ -133,13 +136,7 @@ public class BandwidthManager {
 
 				if (array[index].priority >= array[index * 2].priority) {
 					switchElements(index, index * 2);
-					if (index * 2 + 1 <= accommodated
-							&& array[index * 2].priority == array[index * 2 + 1].priority) {
-						switchElements(index * 2, index * 2 + 1);
-						index = index * 2 + 1;
-					} else {
-						index *= 2;
-					}
+					index *= 2;
 				} else {
 					break;
 				}
