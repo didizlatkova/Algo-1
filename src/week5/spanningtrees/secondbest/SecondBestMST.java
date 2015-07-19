@@ -51,23 +51,21 @@ public class SecondBestMST {
 		int sum = 0;
 
 		do {
-			int countUnvisitedNodes = 0;
 			for (int i = 0; i < adjList.get(node).size(); i++) {
 				if (!visited[adjList.get(node).get(i).value]) {
 					queue.insert(adjList.get(node).get(i).value,
 							adjList.get(node).get(i).priority);
-					countUnvisitedNodes++;
 				}
 			}
 
 			int saveNode = node;
-			if (countUnvisitedNodes != 0) {
-				int sumToAdd = 0;
-				do {
-					node = queue.getMin().value;
-					sumToAdd = queue.getMin().priority;
-					queue.removeMin();
-				} while (visited[node] && !queue.isEmpty());
+			int sumToAdd = 0;
+			do {
+				node = queue.getMin().value;
+				sumToAdd = queue.getMin().priority;
+				queue.removeMin();
+			} while (visited[node] && !queue.isEmpty());
+			if (!visited[node]) {
 				visited[node] = true;
 				sum += sumToAdd;
 				for (QueueElement element : adjList.get(saveNode)) {
@@ -76,9 +74,6 @@ public class SecondBestMST {
 						break;
 					}
 				}
-				nodes.remove((Object) node);
-			} else {
-				queue.removeMin();
 			}
 		} while (!queue.isEmpty());
 
