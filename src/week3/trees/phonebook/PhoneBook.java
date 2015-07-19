@@ -110,14 +110,19 @@ public class PhoneBook {
 	}
 
 	private void remove(ContactNode node) {
+		ContactNode prevNode;
 		if (node.left == null && node.right == null) {
 			this.removeFromParent(node);
 		} else if (node.left != null && node.right == null) {
-			node.value = node.left.value;
-			node.left = node.left.left;
+			prevNode = node.left;
+			node.value = prevNode.value;
+			node.left = prevNode.left;
+			node.right = prevNode.right;
 		} else if (node.right != null && node.left == null) {
-			node.value = node.right.value;
-			node.right = node.right.right;
+			prevNode = node.right;
+			node.value = prevNode.value;
+			node.left = prevNode.left;
+			node.right = prevNode.right;
 		} else {
 			ContactNode replacement = leftMostChild(node.right);
 			remove(replacement);
@@ -130,7 +135,7 @@ public class PhoneBook {
 		while (true) {
 			if (node.value.name.compareTo(nextNode.value.name) < 0) {
 				if (nextNode.left != null) {
-					if (node.value.name.compareTo(nextNode.left.value.name) == 0) {
+					if (node.value.name.equals(nextNode.left.value.name)) {
 						nextNode.left = null;
 						return;
 					}
@@ -138,7 +143,7 @@ public class PhoneBook {
 				}
 			} else if (node.value.name.compareTo(nextNode.value.name) > 0) {
 				if (nextNode.right != null) {
-					if (node.value.name.compareTo(nextNode.right.value.name) == 0) {
+					if (node.value.name.equals(nextNode.right.value.name)) {
 						nextNode.right = null;
 						return;
 					}
