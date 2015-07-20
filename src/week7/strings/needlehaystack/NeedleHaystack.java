@@ -16,12 +16,12 @@ public class NeedleHaystack {
 	}
 
 	private static final int BASE = 31;
-	private static final int MOD = 37;
+	private static final int MOD = 1000007;
 
 	private static void getIndices(String haystack, String needle) {
 		int needleHash = hashFunction(needle, 0, needle.length());
 		int currentHash = hashFunction(haystack, 0, needle.length());
-		int basePower = (int) Math.pow(BASE, needle.length() - 1);
+		int basePower = (int) Math.pow(BASE, needle.length() - 1) % MOD;
 
 		if (currentHash == needleHash) {
 			System.out.println(0);
@@ -29,9 +29,8 @@ public class NeedleHaystack {
 
 		for (int i = 1; i <= haystack.length() - needle.length(); i++) {
 			currentHash = ((currentHash - ((haystack.charAt(i - 1) - 'a' + 1) * basePower))
-					% MOD * BASE)
-					% MOD
-					+ (haystack.charAt(i + needle.length() - 1) - 'a' + 1);
+					* BASE + (haystack.charAt(i + needle.length() - 1) - 'a' + 1))
+					% MOD;
 			if (currentHash == needleHash) {
 				System.out.println(i);
 			}
