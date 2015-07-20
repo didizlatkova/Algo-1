@@ -79,27 +79,19 @@ public class RMQ {
 		int min = array[startIndex];
 		endIndex += originalLength;
 
-		while (startIndex < endIndex) {
+		while (startIndex <= endIndex) {
+			min = Math.min(min, array[startIndex]);
 			if (startIndex % 2 == 1) {
 				// right child
-				min = Math.min(min, array[startIndex]);
 				startIndex++;
-			} else {
-				// left child
-				min = Math.min(min, array[startIndex / 2]);
 			}
-
 			startIndex /= 2;
 
-			if (endIndex % 2 == 1) {
-				// right child
-				min = Math.min(min, array[endIndex / 2]);
-			} else {
+			min = Math.min(min, array[endIndex]);
+			if (endIndex % 2 == 0) {
 				// left child
-				min = Math.min(min, array[endIndex]);
 				endIndex--;
 			}
-
 			endIndex /= 2;
 		}
 
