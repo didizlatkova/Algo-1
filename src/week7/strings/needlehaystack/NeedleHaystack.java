@@ -28,10 +28,9 @@ public class NeedleHaystack {
 		}
 
 		for (int i = 1; i <= haystack.length() - needle.length(); i++) {
-			currentHash = ((currentHash - (haystack.charAt(i - 1) - 'a')
-					* basePower)
-					* BASE + (haystack.charAt(i + needle.length() - 1) - 'a'))
-					% MOD;
+			currentHash = ((currentHash - ((haystack.charAt(i - 1) - 'a') * basePower))
+					% MOD * BASE)
+					% MOD + (haystack.charAt(i + needle.length() - 1) - 'a');
 			if (currentHash == needleHash) {
 				System.out.println(i);
 			}
@@ -42,9 +41,9 @@ public class NeedleHaystack {
 		int hash = 0;
 
 		for (int i = start; i < end; i++) {
-			hash = hash * BASE + (value.charAt(i) - 'a');
+			hash = (hash * BASE + (value.charAt(i) - 'a')) % MOD;
 		}
 
-		return hash % MOD;
+		return hash;
 	}
 }
