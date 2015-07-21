@@ -30,12 +30,12 @@ public class SecondBestMST {
 				adjList.put(firstNode, new ArrayList<QueueElement>());
 				nodes.add(firstNode);
 			}
-			adjList.get(firstNode).add(new QueueElement(secondNode, weight));
+			adjList.get(firstNode).add(new QueueElement(secondNode, weight, 0));
 
 			if (!adjList.containsKey(secondNode)) {
 				adjList.put(secondNode, new ArrayList<QueueElement>());
 			}
-			adjList.get(secondNode).add(new QueueElement(firstNode, weight));
+			adjList.get(secondNode).add(new QueueElement(firstNode, weight, 0));
 		}
 
 		System.out.println(secondBest(adjList, n, nodes));
@@ -54,22 +54,29 @@ public class SecondBestMST {
 			for (int i = 0; i < adjList.get(node).size(); i++) {
 				if (!visited[adjList.get(node).get(i).value]) {
 					queue.insert(adjList.get(node).get(i).value,
-							adjList.get(node).get(i).priority);
+							adjList.get(node).get(i).priority, node);
 				}
 			}
 
-			int saveNode = node;
+			int comingFrom;
 			int sumToAdd = 0;
 			do {
 				node = queue.getMin().value;
 				sumToAdd = queue.getMin().priority;
+				comingFrom = queue.getMin().comingFrom;
 				queue.removeMin();
 			} while (visited[node] && !queue.isEmpty());
 			if (!visited[node]) {
 				visited[node] = true;
 				sum += sumToAdd;
-				for (QueueElement element : adjList.get(saveNode)) {
+				for (QueueElement element : adjList.get(comingFrom)) {
 					if (element.value == node) {
+						element.inMinSpanningTree = true;
+						break;
+					}
+				}
+				for (QueueElement element : adjList.get(node)) {
+					if (element.value == comingFrom) {
 						element.inMinSpanningTree = true;
 						break;
 					}
@@ -91,12 +98,19 @@ public class SecondBestMST {
 					visitedDFS = new boolean[n];
 					x = adjList.get(i).get(j).priority;
 					y = Integer.MIN_VALUE;
-					dfs(adjList, adjList.get(i).get(j).value, i);
-					for (int k = 1; k < cycle.size() - 1; k++) {
-						int currentWeight = adjList.get(cycle.get(k)).get(
-								cycle.get(k + 1)).priority;
-						if (currentWeight != x && y < currentWeight) {
-							y = currentWeight;
+					found = false;
+					dfs(adjList, adjList.get(i).get(j).value, i, true);
+					for (int k = 0; k < cycle.size() - 1; k++) {
+						for (int l = 0; l < adjList.get(cycle.get(k)).size(); l++) {
+							if (adjList.get(cycle.get(k)).get(l).value == cycle
+									.get(k + 1)) {
+								int currentWeight = adjList.get(cycle.get(k))
+										.get(l).priority;
+								if (currentWeight != x && y < currentWeight) {
+									y = currentWeight;
+								}
+								break;
+							}
 						}
 					}
 
@@ -107,50 +121,38 @@ public class SecondBestMST {
 			}
 		}
 
-		// for (Integer outsideNode : nodes) {
-		// cycle = new ArrayList<Integer>();
-		// visitedDFS = new boolean[n];
-		// dfs(adjList, outsideNode, outsideNode, nodes);
-		// x = adjList.get(cycle.get(0)).get(cycle.get(1)).priority;
-		// y = Integer.MIN_VALUE;
-		// for (int i = 1; i < cycle.size() - 1; i++) {
-		// int currentWeight = adjList.get(cycle.get(i)).get(
-		// cycle.get(i + 1)).priority;
-		// if (currentWeight != x && y < currentWeight) {
-		// y = currentWeight;
-		// }
-		// }
-		//
-		// if (x - y < min) {
-		// min = x - y;
-		// }
-		// }
-
 		return sum + min;
 	}
 
 	private static List<Integer> cycle;
 	private static boolean[] visitedDFS;
+	private static boolean found;
 
-	private static boolean dfs(Map<Integer, List<QueueElement>> adjList,
-			int node, int startingNode) {
+	private static void dfs(Map<Integer, List<QueueElement>> adjList, int node,
+			int startingNode, boolean firstCall) {
 		if (node == startingNode) {
-			return true;
+			cycle.add(node);
+			found = true;
+			return;
 		}
 
 		visitedDFS[node] = true;
 		cycle.add(node);
 		for (int i = 0; i < adjList.get(node).size(); i++) {
 			int currentNode = adjList.get(node).get(i).value;
+			if (firstCall && currentNode == startingNode) {
+				continue;
+			}
 			if (!visitedDFS[currentNode]
 					&& adjList.get(node).get(i).inMinSpanningTree) {
-				if (!dfs(adjList, currentNode, startingNode)) {
+				dfs(adjList, currentNode, startingNode, false);
+				if (!found) {
 					cycle.remove((Object) currentNode);
+				} else {
+					break;
 				}
 			}
 		}
-
-		return false;
 	}
 
 	private static class PriorityQueue {
@@ -170,14 +172,14 @@ public class SecondBestMST {
 			return array[1];
 		}
 
-		public void insert(int element, int priority) {
+		public void insert(int element, int priority, int comingFrom) {
 			if (accommodated == array.length) {
 				throw new IndexOutOfBoundsException();
 			}
 
 			accommodated++;
 			int index = accommodated;
-			array[index] = new QueueElement(element, priority);
+			array[index] = new QueueElement(element, priority, comingFrom);
 
 			while (index / 2 > 0) {
 				if (array[index].priority < array[index / 2].priority) {
@@ -241,14 +243,16 @@ public class SecondBestMST {
 
 		public int value;
 		public int priority;
+		public int comingFrom;
 		public boolean inMinSpanningTree;
 
-		public QueueElement(int value, int priority) {
+		public QueueElement(int value, int priority, int comingFrom) {
 			this.value = value;
 			this.priority = priority;
+			this.comingFrom = comingFrom;
 			this.inMinSpanningTree = false;
 		}
-
+		
 	}
 
 }

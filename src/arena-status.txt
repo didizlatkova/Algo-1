@@ -1,5 +1,4 @@
 Week 2 - K-lists 				Java 	ok ok ok ok ok ok ok tl tl tl
-Week 3 - Range Minimum Query 	Java 	ok wa wa wa wa wa wa wa wa wa wa
 Week 3 - Online Median 			Java 	ok ok ok ok ok ok ok tl tl tl tl
 Week 3 - Phone Book 2 			Java 	ok ok ok ok ok ok ok ok wa wa
 Week 3 - Jumping Soldiers 		Java 	ok ok wa ok ok ok ok ok ok ok
@@ -7,6 +6,7 @@ Week 4 - Pouring Glasses 		Java 	ok ok tl ok tl tl tl tl tl tl
 Week 4 - Closest Coffee Store 	Java 	ok wa ok wa wa ok wa ok ok ok
 Week 4 - Valid Directories 		Java 	ok wa wa ok ok wa ok ok wa wa
 
+Week 5 - Second Best MST - finished/diff answer
+
 Week 4 - Castaway - not solved
-Week 5 - Second Best MST - not finished
 Week 5 - DNA Sequence - not solved
