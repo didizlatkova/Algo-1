@@ -50,10 +50,10 @@ public class ClosestCoffeeShop {
 		boolean visited[] = new boolean[graph.length];
 		int pathLengths[] = new int[graph.length];
 		int current;
+		visited[startingPoint] = true;
 
 		while (queue.size() > 0) {
-			current = queue.poll();
-			visited[current] = true;
+			current = queue.poll();			
 			if (isCoffeeStore[current]) {
 				return pathLengths[current];
 			}
@@ -61,6 +61,7 @@ public class ClosestCoffeeShop {
 				if (graph[current][i] && !visited[i]) {
 					queue.add(i);
 					pathLengths[i] = pathLengths[current] + 1;
+					visited[i] = true;
 				}
 			}
 		}
