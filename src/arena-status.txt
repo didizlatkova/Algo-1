@@ -7,4 +7,3 @@ Week 4 - Valid Directories 		Java 	ok wa wa ok ok wa ok ok wa wa
 
 Week 4 - Castaway - not solved
 Week 5 - DNA Sequence - not solved
-Week 8 - K Paths - not solved
