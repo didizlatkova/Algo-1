@@ -7,69 +7,58 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KLists {
-	
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		
+
+	public static void main(String[] args) throws NumberFormatException,
+			IOException {
+
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				System.in));
-		
+
 		int k = Integer.parseInt(reader.readLine());
 		List<Node> lists = new ArrayList<Node>();
-		
+
+		LinkedList list;
+		String[] input;
+		HeapNode heap = new HeapNode(k);
 		for (int i = 0; i < k; i++) {
-			LinkedList list = new LinkedList();
-			String[] input = reader.readLine().split(" ");
+			list = new LinkedList();
+			input = reader.readLine().split(" ");
 			for (int j = 0; j < input.length - 1; j++) {
 				list.add(Integer.parseInt(input[j]));
 			}
+			heap.insert(list.getFirstNode());
 			lists.add(list.getFirstNode());
 		}
-		
-		Node result = KLists.merge(lists);
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append(result.value + " ");
-		while (result.nextNode.nextNode != null) {
-			result = result.nextNode;
-			sb.append(result.value + " ");			
+
+		List<Integer> result = KLists.merge(lists, heap);
+
+		for (int i = 0; i < result.size() - 1; i++) {
+			System.out.print(result.get(i) + " ");
 		}
-		
-		sb.append(result.nextNode.value);
-		System.out.println(sb.toString());
+		System.out.print(result.get(result.size() - 1));
 	}
 
 	// Merge K sorted lists.
-	public static Node merge(List<Node> lists) {
-		Node sortedNodes;
+	public static List<Integer> merge(List<Node> lists, HeapNode heap) {
+		List<Integer> sortedNodes = new ArrayList<Integer>();
 		Node currentNode;
-		
-		HeapNode heap = new HeapNode(lists.size());
-		for (int i = 0; i < lists.size(); i++) {
-			heap.insert(lists.get(i));
-		}
+
 		currentNode = heap.getMin();
 		heap.removeMin();
-		sortedNodes = new Node(currentNode.value);
-		Node firstNode = sortedNodes;
-				
-		while (currentNode.nextNode != null) {
-			heap.insert(currentNode.nextNode);
+		sortedNodes.add(currentNode.value);
+
+		while (!heap.isEmpty()) {
+			if (currentNode.nextNode != null) {
+				heap.insert(currentNode.nextNode);
+			}
 			currentNode = heap.getMin();
 			heap.removeMin();
-			sortedNodes.nextNode = new Node(currentNode.value);
-			sortedNodes = sortedNodes.nextNode;
-			
-			while (currentNode.nextNode == null && !heap.isEmpty()) {
-				currentNode = heap.getMin();
-				heap.removeMin();
-				sortedNodes.nextNode = new Node(currentNode.value);
-				sortedNodes = sortedNodes.nextNode;
-			}
-		}		
-		
-		return firstNode;
+			sortedNodes.add(currentNode.value);
+		}
+
+		return sortedNodes;
 	}
-	
+
 	private static class HeapNode {
 
 		private Node[] array;
@@ -80,18 +69,10 @@ public class KLists {
 		}
 
 		public Node getMin() {
-			if (accommodated == 0) {
-				throw new IndexOutOfBoundsException();
-			}
-
 			return array[1];
 		}
 
 		public void insert(Node element) {
-			if (accommodated == array.length) {
-				throw new IndexOutOfBoundsException();
-			}
-
 			accommodated++;
 			int index = accommodated;
 			array[index] = element;
@@ -110,17 +91,6 @@ public class KLists {
 			Node save = array[i];
 			array[i] = array[j];
 			array[j] = save;
-		}
-
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			sb.append("[");
-			for (int i = 1; i < array.length; i++) {
-				sb.append(array[i].value + ", ");
-			}
-			sb.append("]");
-
-			return sb.toString();
 		}
 
 		public void removeMin() {
@@ -165,10 +135,11 @@ public class KLists {
 		}
 
 	}
-	
+
 	private static class LinkedList {
 
 		private Node first;
+		private Node last;
 
 		public Node getFirstNode() {
 			return this.first;
@@ -177,16 +148,13 @@ public class KLists {
 		public void add(int value) {
 			if (first == null) {
 				first = new Node(value);
+				last = first;
 				return;
 			}
 
-			Node node = first;
-			while (node.nextNode != null) {
-				node = node.nextNode;
-			}
-
-			node.nextNode = new Node(value);
+			last.nextNode = new Node(value);
+			last = last.nextNode;
 		}
 	}
-	
+
 }
